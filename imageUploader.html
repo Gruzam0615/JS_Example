@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<style>
+    .UploadedImageBody {
+        width: 500px;
+        height: 500px;
+        background-color: black;
+        color: white;
+        margin: 10px;
+    }
+    #UploadedImageImg {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+</head>
+<body>
+    <label for="uploadImage">파일: </label>
+    <input type="file" id="uploadImage" />
+    <input type="button" id="uploadImageBtn" value="업로드" />
+    <div class="UploadedImageBody">
+        <img id="UploadedImageImg" />
+    </div>
+</body>
+<script>
+    const _UploadImage = document.querySelector("#uploadImage");
+    const _UploadImageBtn = document.querySelector("#uploadImageBtn");
+
+    const _UploadedImageBody = document.querySelectorAll(".UploadedImageBody")[0];
+    const _UploadedImageImg = document.querySelector("#UploadedImageImg");
+    
+    _UploadImageBtn.addEventListener("click", (event) => {
+        let fr = new FileReader();
+        console.log(_UploadImage.files[0]);
+        console.log(_UploadImage.value);
+
+        fr.onload = (e) => {            
+            _UploadedImageImg.setAttribute("src", e.target.result);
+            let url = URL.createObjectURL(_UploadImage.files[0]);
+            // _UploadedImageBody.setAttribute("background-image", url);
+        };
+        
+        fr.readAsDataURL(_UploadImage.files[0]);
+    });
+</script>
+</html>
