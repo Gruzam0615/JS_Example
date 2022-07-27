@@ -4,11 +4,14 @@
 <meta charset="UTF-8"/>
 <style>
     .UploadedImageBody {
-        width: 500px;
-        height: 500px;
+        width: 700px;
+        height: 320px;
         background-color: black;
         color: white;
         margin: 10px;
+    }
+    #uploadImage {
+        display: none;
     }
     #UploadedImageImg {
         width: 100%;
@@ -17,32 +20,44 @@
 </style>
 </head>
 <body>
-    <label for="uploadImage">파일: </label>
+    <!-- <label for="uploadImage">파일: </label> -->
     <input type="file" id="uploadImage" />
     <input type="button" id="uploadImageBtn" value="업로드" />
     <div class="UploadedImageBody">
         <img id="UploadedImageImg" />
     </div>
 </body>
-<script>
+<script>    
     const _UploadImage = document.querySelector("#uploadImage");
     const _UploadImageBtn = document.querySelector("#uploadImageBtn");
-
-    const _UploadedImageBody = document.querySelectorAll(".UploadedImageBody")[0];
-    const _UploadedImageImg = document.querySelector("#UploadedImageImg");
+    const _UploadedImageBody = document.querySelectorAll(".UploadedImageBody")[0];    
     
-    _UploadImageBtn.addEventListener("click", (event) => {
+    const FileUpProcess = () => {
+        const _UploadedImageImg = document.querySelector("#UploadedImageImg");
+
         let fr = new FileReader();
+        let frResult;
+
         console.log(_UploadImage.files[0]);
         console.log(_UploadImage.value);
+
+        fr.readAsDataURL(_UploadImage.files[0]);
 
         fr.onload = (e) => {            
             _UploadedImageImg.setAttribute("src", e.target.result);
             let url = URL.createObjectURL(_UploadImage.files[0]);
             // _UploadedImageBody.setAttribute("background-image", url);
+
+            frResult = (e.target.result);
         };
-        
-        fr.readAsDataURL(_UploadImage.files[0]);
+        fr.onloadend = (e) => {
+            console.log(frResult);
+        }
+    }
+
+    _UploadImageBtn.addEventListener("click", (event) => {
+        _UploadImage.click();
+        _UploadImage.addEventListener("change", FileUpProcess);
     });
 </script>
 </html>
