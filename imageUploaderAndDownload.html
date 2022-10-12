@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<style>
+    .UploadedImageBody {
+        width: 700px;
+        height: 320px;
+        background-color: black;
+        color: white;
+        margin: 10px;
+    }
+    #uploadImage {
+        display: none;
+    }
+    #UploadedImageImg {
+        width: 100%;
+        height: 100%;
+    }
+    #downloadImageBtnAnchor {
+        visibility: hidden;
+    }
+</style>
+</head>
+<body>
+    <label for="uploadImage">파일: </label>
+    <input type="file" id="uploadImage" />
+    <input type="button" id="uploadImageBtn" value="업로드" />
+    <a id="downloadImageBtnAnchor" href="" download>다운로드</a>
+    <div class="UploadedImageBody">
+        <img id="UploadedImageImg" />
+    </div>
+</body>
+<script>    
+    const _UploadImage = document.querySelector("#uploadImage");
+    const _UploadImageBtn = document.querySelector("#uploadImageBtn");
+    const _UploadedImageBody = document.querySelectorAll(".UploadedImageBody")[0];
+    const _DownloadImageBtnAnchor = document.querySelector("#downloadImageBtnAnchor");
+    const _DownloadImageBtn = document.querySelector("#downloadImageBtn");   
+    let frResult = "";  
+    let url = "";
+    let fileName = "";
+
+    const FileUpProcess = () => {
+        const _UploadedImageImg = document.querySelector("#UploadedImageImg");
+
+        let fr = new FileReader();
+
+        console.log("UploadImage Origin", _UploadImage);
+        console.log("UploadImage[0]", _UploadImage.files[0]);
+        console.log("UploadImage value", _UploadImage.value);
+        fileName = _UploadImage.files[0].name;
+
+        fr.readAsDataURL(_UploadImage.files[0]);
+        // fr.readAsArrayBuffer(_UploadImage.files[0]);
+
+        fr.onload = (e) => {
+            console.log("file onload", e);
+            console.log("file onload e.target.result", e.target.result);
+            // _UploadedImageImg.setAttribute("src", e.target.result);
+            // url = URL.createObjectURL(_UploadImage.files[0]);
+            
+            frResult = e.target.result;
+            console.log("url", url);
+        };
+        fr.onloadend = (e) => {
+            console.log('onloadend', e);
+            _UploadedImageImg.setAttribute("src", e.target.result);
+            url = URL.createObjectURL(_UploadImage.files[0]);
+        }
+    }
+
+    _UploadImageBtn.addEventListener("click", (event) => {
+        _UploadImage.click();
+        _UploadImage.addEventListener("change", FileUpProcess);
+    });
+
+    _UploadImage.addEventListener("change", (e) => {
+        if(_UploadImage != null) {
+            console.log("fileChange", e.target.value);
+            console.log("fileResult", frResult);
+            _DownloadImageBtnAnchor.style.visibility="visible"; 
+        }
+        else {
+            console.log("imageFile is null");
+        }
+    })
+
+    _DownloadImageBtnAnchor.addEventListener("click", (e) => {
+        // console.log(e.target.href);
+        e.target.download=fileName;
+        e.target.href = url;
+    })
+
+</script>
+</html>
